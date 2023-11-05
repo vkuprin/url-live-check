@@ -2,6 +2,4 @@ index.js
 .idea
 tsconfig.json
 index.ts
-example/*
-example
 node_modules
