@@ -1,4 +1,4 @@
-import fetch from 'cross-fetch';
+// import fetch from 'cross-fetch';
 
 export interface UrlLiveCheckOptions {
     method?: string;
@@ -20,6 +20,7 @@ const defaultOptions: UrlLiveCheckOptions = {
     userAgent: 'Mozilla/5.0 (url-live-check)',
     reportStatus: false,
     ignoreNetworkErrors: false,
+    checkContent: false,
 };
 
 const setupHeaders = (options: UrlLiveCheckOptions): Headers => {
@@ -64,7 +65,7 @@ const checkResponseStatus = async (response: Response, options: UrlLiveCheckOpti
 
     console.log(response);
 
-    return response.status >= 200 && response.status < 300;
+    return true;
 
 };
 
