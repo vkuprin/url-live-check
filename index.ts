@@ -2,7 +2,6 @@ import fetch from 'cross-fetch';
 
 export interface UrlLiveCheckOptions {
     method?: string;
-    timeout?: number;
     validateSSL?: boolean;
     range?: string;
     customHeaders?: Record<string, string>;
@@ -11,22 +10,16 @@ export interface UrlLiveCheckOptions {
     responseTime?: boolean;
     reportStatus?: boolean;
     ignoreNetworkErrors?: boolean;
+    checkContent?: boolean;
 }
 
 const defaultOptions: UrlLiveCheckOptions = {
     method: 'HEAD',
-    timeout: 5000,
-    validateSSL: true,
+    validateSSL: false,
     range: 'bytes=0-1',
     userAgent: 'Mozilla/5.0 (url-live-check)',
     reportStatus: false,
     ignoreNetworkErrors: false,
-};
-
-const createAbortSignal = (timeout: number): [AbortController, NodeJS.Timeout] => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-    return [controller, timeoutId];
 };
 
 const setupHeaders = (options: UrlLiveCheckOptions): Headers => {
@@ -51,30 +44,47 @@ const checkResponseStatus = async (response: Response, options: UrlLiveCheckOpti
         }
     }
 
+    if (response.type === 'error' || response.status === 0) {
+        return false;
+    }
+
     if (!options.validateSSL && response.url.startsWith('https:')) {
         console.warn('SSL validation is disabled, which is insecure.');
     }
 
-    // Return true only if the response.ok is true (status 200-299).
-    return response.ok;
+    if (options.checkContent) {
+        try {
+            const text = await response.text(); // get the response body
+            return text.length > 0;
+        } catch (e) {
+            console.error('Error while reading response text:', e);
+            return false;
+        }
+    }
+
+    console.log(response);
+
+    return response.status >= 200 && response.status < 300;
+
 };
 
-export const urlLiveCheck = async (url: string, options: UrlLiveCheckOptions = {}): Promise<undefined | boolean> => {
+
+export const urlLiveCheck = async (url: string, options: UrlLiveCheckOptions = {}): Promise<boolean> => {
     const opts: UrlLiveCheckOptions = { ...defaultOptions, ...options };
-    const [controller, timeoutId] = createAbortSignal(opts.timeout!);
     const headers = setupHeaders(opts);
 
+    let response: Response;
     try {
-        const response = await fetch(url, {
+        response = await fetch(url, {
             method: opts.method,
             headers: headers,
-            signal: controller.signal,
         });
-
-        clearTimeout(timeoutId);
-        return await checkResponseStatus(response, opts);
     } catch (error) {
-        clearTimeout(timeoutId);
+
+        if (opts.ignoreNetworkErrors) {
+            console.warn('Network error ignored:', error);
+            return true;
+        }
 
         console.error('Error while fetching:', error);
 
@@ -82,6 +92,9 @@ export const urlLiveCheck = async (url: string, options: UrlLiveCheckOptions = {
             console.error('Request was aborted due to timeout:', error.message);
         }
 
-        return !opts.ignoreNetworkErrors;
+        return false;
     }
+
+    return checkResponseStatus(response, opts);
 };
+

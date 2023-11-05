@@ -1,22 +1,31 @@
-# url-live-check
+# url-live-check (WIP)
 
 > Verify the existence of a website or URL
 
 This Node.js module checks if a given website is up and accessible. It is designed to work both in Node.js and the browser (with a bundler)
 
-## Install
+[//]: # (## Install)
 
-```sh
-npm install url-live-check
-```
+[//]: # ()
+[//]: # (```sh)
 
-```sh
-yarn add url-live-check
-```
+[//]: # (npm install url-live-check)
 
-```sh
-pnpm add url-live-check
-```
+[//]: # (```)
+
+[//]: # ()
+[//]: # (```sh)
+
+[//]: # (yarn add url-live-check)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (```sh)
+
+[//]: # (pnpm add url-live-check)
+
+[//]: # (```)
 
 ## Usage
 

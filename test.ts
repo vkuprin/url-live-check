@@ -11,9 +11,9 @@ describe('urlLiveCheck', () => {
     });
 
     test('returns false when website is not reachable', async () => {
-        const exists = await urlLiveCheck('https://asdfasfasfdasf.com', { method: 'GET' });
-        console.log(exists);
-        expect(exists).toBeFalsy();
+        const notExists = await urlLiveCheck('https://asdfasfasfdasf.com', { method: 'GET', checkContent: true },);
+        console.log(notExists);
+        expect(notExists).toBeFalsy();
     });
 
     test('handles custom headers correctly', async () => {
@@ -22,11 +22,6 @@ describe('urlLiveCheck', () => {
         };
         const exists = await urlLiveCheck(website, { customHeaders });
         expect(exists).toBeTruthy();
-    });
-
-    test('aborts the request after a timeout', async () => {
-        const exists = await urlLiveCheck(website, { timeout: 1 });
-        expect(exists).toBeFalsy();
     });
 
     test('returns true when website is reachable using GET method', async () => {
