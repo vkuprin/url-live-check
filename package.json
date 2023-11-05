@@ -1,0 +1,44 @@
+{
+  "name": "url-live-check",
+  "version": "1.0.0",
+  "description": "Check if a URL exists or available",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vkuprin/url-live-check"
+  },
+  "keywords": [
+    "website",
+    "exists",
+    "check"
+  ],
+  "author": "Vitaly Kuprin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vkuprin/url-live-check/issues"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
+  "homepage": "https://github.com/vkuprin/url-live-check#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.7",
+    "jest": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "cross-fetch": "^4.0.0"
+  }
+}
