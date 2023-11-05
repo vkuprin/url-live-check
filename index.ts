@@ -75,12 +75,13 @@ export const urlLiveCheck = async (url: string, options: UrlLiveCheckOptions = {
         return await checkResponseStatus(response, opts);
     } catch (error) {
         clearTimeout(timeoutId);
+
         console.error('Error while fetching:', error);
 
         if (error instanceof Error && error.name === 'AbortError') {
-            console.error('Request timed out:', error.message);
+            console.error('Request was aborted due to timeout:', error.message);
         }
 
-        return opts.ignoreNetworkErrors;
+        return !opts.ignoreNetworkErrors;
     }
 };

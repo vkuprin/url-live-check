@@ -1,6 +1,7 @@
 import { urlLiveCheck } from './index';
 
 const website = 'https://vkuprin.com';
+const notExistingWebsite = 'https://vkuprin.com/does-not-exist';
 
 
 describe('urlLiveCheck', () => {
@@ -10,7 +11,8 @@ describe('urlLiveCheck', () => {
     });
 
     test('returns false when website is not reachable', async () => {
-        const exists = await urlLiveCheck('https://example.com/does-not-exist');
+        const exists = await urlLiveCheck('https://asdfasfasfdasf.com', { method: 'GET' });
+        console.log(exists);
         expect(exists).toBeFalsy();
     });
 
@@ -23,7 +25,7 @@ describe('urlLiveCheck', () => {
     });
 
     test('aborts the request after a timeout', async () => {
-        const exists = await urlLiveCheck(website, { timeout: 5 });
+        const exists = await urlLiveCheck(website, { timeout: 1 });
         expect(exists).toBeFalsy();
     });
 
@@ -33,7 +35,7 @@ describe('urlLiveCheck', () => {
     });
 
     test('returns true when ignoreNetworkErrors is true and fetch fails', async () => {
-        const exists = await urlLiveCheck(website, { ignoreNetworkErrors: true });
+        const exists = await urlLiveCheck(notExistingWebsite, { ignoreNetworkErrors: true });
         expect(exists).toBeTruthy();
     });
 
